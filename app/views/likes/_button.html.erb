@@ -1,0 +1,9 @@
+<div id="like_button_<%= post.id %>">
+  <p><%= post.likes.count == 1 ? "1 Like" : "#{post.likes.count} Likes" %></p>
+  <% if current_user && current_user.likes.exists?(post_id: post.id) %>
+    <% like = current_user.likes.find_by(post_id: post.id) %>
+    <%= button_to 'Unlike', post_like_path(post, like), method: :delete, data: { turbo: true } %>
+  <% else %>
+    <%= button_to 'Like', post_likes_path(post), method: :post, data: { turbo: true } %>
+  <% end %>
+</div>

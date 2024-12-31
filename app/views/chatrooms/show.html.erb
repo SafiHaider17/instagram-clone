@@ -1,0 +1,18 @@
+
+<div id="chatroom-id" data-chatroom-id="<%= @chatroom.try(:id) %>"></div>
+
+<h2><%= @chatroom.name %></h2>
+<h3>Participants: <%= @chatroom.users.uniq.count %></h3>
+
+
+<div id="chat-messages">
+  <% @messages.each do |message| %>
+    <div class="message <%= 'current-user' if message.user == current_user %>">
+      <%= render 'messages/message', message: message %>
+    </div>
+  <% end %>
+</div>
+
+<div id="current-user" data-username="<%= current_user.username %>"></div>
+
+<%= render 'messages/form', message: @message, chatroom: @chatroom %>

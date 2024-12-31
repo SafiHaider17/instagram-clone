@@ -1,0 +1,17 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Posts" %>
+<%= link_to "New post", new_post_path %>
+<h1>Posts</h1>
+
+
+
+<div id="posts">
+  <% @posts.each do |post| %>
+    <%= render post %>
+    <%= render partial: "likes/button", locals: { post: post } %>
+    <p>
+      <%= link_to "Show this post", post %>
+    </p>
+  <% end %>
+</div>

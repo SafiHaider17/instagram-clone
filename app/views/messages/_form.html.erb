@@ -1,0 +1,14 @@
+<%= form_with(model: message, local: false, remote: true) do |f| %>
+
+  <%= f.hidden_field :chatroom_id , value: chatroom.id%>
+
+  <div class="field">
+    <%= f.text_field :content, placeholder: "Type a message" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Send" %>
+  </div>
+<% end %>
+
+

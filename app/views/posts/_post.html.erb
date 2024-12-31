@@ -1,0 +1,33 @@
+<div id="<%= dom_id post %>">
+  <p>
+    <% if post.image.image? %>
+      <%= image_tag(post.image) if post.image.attached? %>
+    <% else %>
+      <%= video_tag(post.image, controls: "") if post.image.attached? %>
+    <% end %>
+  </p>
+
+  <p>
+    <strong>Body:</strong>
+    <%= post.body %>
+  </p>
+
+
+  <p>
+    <strong>Posted by:</strong>
+    <%= post.user.username %>
+  </p>
+
+  <p>
+    <strong>Posted at:</strong>
+    <%= post.created_at.strftime("%-l:%M%P, %B %-d, %Y") %>
+  </p>
+
+  <p>
+    <strong>User:</strong>
+    <%= post.user_id %>
+  </p>
+</div>
+
+
+
