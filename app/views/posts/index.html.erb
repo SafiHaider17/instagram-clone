@@ -1,17 +1,43 @@
 <p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Posts" %>
-<%= link_to "New post", new_post_path %>
-<h1>Posts</h1>
+  <%= render "posts/filter" %>
+<%= link_to "New post", new_post_path, class: "btn btn-primary" %>
+
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Image/Video</th>
+      <th>Body</th>
+      <th>Posted By</th>
+      <th>Posted At</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr id="<%= dom_id(post) %>">
+        <td>
+          <% if post.image.attached? %>
+            <% if post.image.content_type.start_with?('image') %>
+              <%= image_tag(post.image, width: "100", height: "100", class: 'img-fluid') %>
+            <% elsif post.image.content_type.start_with?('video') %>
+              <%= video_tag(post.image, controls: true, width: "100", height: "100", class: 'img-fluid') %>
+            <% end %>
+          <% else %>
+            <p>No media attached</p>
+          <% end %>
+        </td>
+        <td><%= post.body %></td>
+        <td><%= post.user.username %></td>
+        <td><%= post.created_at.strftime("%-l:%M%P, %B %-d, %Y") %></td>
+        <td>
+          <%= link_to "View", post, class: "btn btn-info btn-sm" %>
+          <%= render partial: "likes/button", locals: { post: post } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 
 
-<div id="posts">
-  <% @posts.each do |post| %>
-    <%= render post %>
-    <%= render partial: "likes/button", locals: { post: post } %>
-    <p>
-      <%= link_to "Show this post", post %>
-    </p>
-  <% end %>
-</div>

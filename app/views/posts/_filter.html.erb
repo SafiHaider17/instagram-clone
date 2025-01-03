@@ -1,0 +1,17 @@
+<%= form_with(url: posts_path, method: :get, class: "d-flex align-items-center") do |f| %>
+  <div>
+    <%= f.select :filter_by, options_for_select([
+      ["Select a filter", ""], 
+      ["Username (Z to A)", "username"], 
+      ["Username (A to Z)", "username_asc"], 
+      ["Date (Desc)", "date"], 
+      ["Date (Asc)", "date_asc"],
+      ["Time (Ascending)", "time"]
+    ], 
+    selected: params[:filter_by], 
+    class: "form-select") %>
+  </div>  
+  <%= f.submit "Filter", class: "btn btn-primary", style: "--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" %>
+<% end %>
+
+

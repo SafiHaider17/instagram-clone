@@ -1,0 +1,11 @@
+ dpkg-buildpackage -rfakeroot -us -uc -ui -i -b
+dpkg-buildpackage: info: source package vips
+dpkg-buildpackage: info: source version 8.7.4-1
+dpkg-buildpackage: info: source distribution unstable
+dpkg-buildpackage: info: source changed by Laszlo Boszormenyi (GCS) <gcs@debian.org>
+ dpkg-source -i --before-build vips-8.7.4
+dpkg-buildpackage: info: host architecture amd64
+dpkg-source: info: applying reproducible-build.patch
+dpkg-checkbuilddeps: error: Unmet build dependencies: cdbs (>= 0.4.93~) flex python-gi-dev (>= 3.12) libgirepository1.0-dev gtk-doc-tools (>= 1.14)
+dpkg-buildpackage: warning: build dependencies/conflicts unsatisfied; aborting
+dpkg-buildpackage: warning: (Use -d flag to override.)

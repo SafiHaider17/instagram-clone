@@ -10,5 +10,16 @@ class User < ApplicationRecord
 
   has_many :messages
   has_many :chatrooms
+  has_one_attached :avatar
+
 end
+  # def avatar_thumbnail
+  #   if avatar.attached?
+  #     avatar.variant(resize: '150x150!').processed
+  #   else
+  #     "default_profile.jpg"
+  #   end
+  # end
+
+
 

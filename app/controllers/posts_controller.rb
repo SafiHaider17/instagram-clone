@@ -2,16 +2,35 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_post, only: %i[ show edit update destroy ]
 
-
-  # GET /posts or /posts.json
   def index
-    #@posts = Post.all.order(created_at: :desc)
-    @posts = Post.joins(:user).order('users.username DESC, posts.created_at DESC')
-    
+    @posts = Post.all
 
+    if params[:filter_by].present?
+      case params[:filter_by]
+      when "username"
+        @posts = @posts.joins(:user).order("users.username DESC")
+      when "username_asc"
+        @posts = @posts.joins(:user).order("users.username ASC")
+      when "date"
+        @posts = @posts.order(created_at: :desc)
+      when "date_asc"
+        @posts = @posts.order(created_at: :asc)
+      when "time"
+        @posts = @posts.order(created_at: :asc)
+      end
+    else
+      @posts = @posts.order(created_at: :desc)
+    end
+
+
+    if params[:search].present?
+      @posts = @posts.joins(:user).where('users.username ILIKE ?', "%#{params[:search]}%")
+      if @posts.empty?
+        @posts = Post.search_by_body(params[:search])
+      end
+    end
   end
 
-  # GET /posts/1 or /posts/1.json
   def show
     @posts = Post.all
   end
@@ -63,14 +82,18 @@ class PostsController < ApplicationController
     end
   end
 
+  
+
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_post
       @post = Post.find(params[:id])
     end
-
-    # Only allow a list of trusted parameters through.
     def post_params
       params.require(:post).permit(:body, :image)
     end
 end
+
+
+
+
+

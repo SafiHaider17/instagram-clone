@@ -18,4 +18,3 @@ me jis user sign kr k many post dal sakte hai or dusre user us me comments kr
 
   https://blog.heroku.com/real_time_rails_implementing_websockets_in_rails_5_with_action_cable
 
- 
