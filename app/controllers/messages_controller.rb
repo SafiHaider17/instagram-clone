@@ -2,8 +2,8 @@ class MessagesController < ApplicationController
   def create
     @message = current_user.messages.build(message_params)
     if @message.save
-      redirect_to request.referrer
-       #SendMessageJob.perform_later(@message)
+      SendMessageJob.perform_later(@message)
+      #redirect_to request.referrer
     end
   end
 
@@ -13,5 +13,3 @@ class MessagesController < ApplicationController
     params.require(:message).permit(:content, :chatroom_id)
   end
 end
-
-
