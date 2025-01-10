@@ -1,19 +1,18 @@
-<%= form_with(model: post) do |form| %>
-  <% if post.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
-
-      <ul>
-        <% post.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
+<%= form_with(model: post, id: "post-form") do |form| %>
   <div>
-    <%= form.label :image, style: "display: block"%>
-    <%= form.file_field :image %>
+    <%= form.label :image, style: "display: block" %>
+    <%= form.file_field :image, id: "image-input" %>
+    <button type="button" id="open-webcam" onclick="startWebcam()">Webcam</button>
+    <button type="button" id="stop-webcam" onclick="stopWebcam()">Stop Webcam</button>
+    <div id="webcam-container" style="display:none;">
+      <video id="webcam" width="320" height="240" autoplay></video>
+      <button type="button" id="capture" onclick="captureImage()">Capture Image</button>
+      <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+    <div id="captured-image-container" style="display:none;">
+      <h3>Captured Image:</h3>
+      <img id="captured-image" src="" alt="Captured Image" width="320" height="240" />
+    </div>
   </div>
 
   <div>
@@ -21,13 +20,79 @@
     <%= form.text_field :body %>
   </div>
 
-
   <div>
     <%= form.submit %>
   </div>
 <% end %>
 
+<script>
+  let webcamStream; // Variable to store the webcam stream
 
+  // Function to start the webcam
+  function startWebcam() {
+    const video = document.getElementById('webcam');
+    const webcamContainer = document.getElementById('webcam-container');
+    webcamContainer.style.display = 'block';
 
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+          webcamStream = stream; // Store the stream
+          video.srcObject = stream;
+        })
+        .catch(function (error) {
+          console.error("Error accessing webcam: ", error);
+        });
+    }
+  }
 
+  // Function to capture image from webcam and display it
+  function captureImage() {
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const imageInput = document.getElementById('image-input');
+    const capturedImageContainer = document.getElementById('captured-image-container');
+    const capturedImage = document.getElementById('captured-image');
 
+    // Set canvas size to match video size
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert the canvas image to a Blob (image file)
+    canvas.toBlob(function(blob) {
+      const file = new File([blob], "captured_image.png", { type: "image/png" });
+
+      // Set the captured file to the file input
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      imageInput.files = dataTransfer.files;
+
+      // Show the captured image in the container
+      const imageUrl = URL.createObjectURL(file);
+      capturedImage.src = imageUrl;
+      capturedImageContainer.style.display = 'block';  // Show the image container
+
+      // Hide the webcam container after capturing the image
+      document.getElementById('webcam-container').style.display = 'none';
+
+      // Stop the webcam stream after capturing the image
+      stopWebcam();
+    }, 'image/png');
+  }
+
+  // Function to stop the webcam stream
+  function stopWebcam() {
+    if (webcamStream) {
+      const tracks = webcamStream.getTracks(); // Get all tracks (video/audio)
+      tracks.forEach(track => track.stop()); // Stop each track
+      webcamStream = null; // Clear the stream variable
+    }
+
+    const video = document.getElementById('webcam');
+    video.srcObject = null; // Stop showing video on the page
+    document.getElementById('webcam-container').style.display = 'block'; // Hide the webcam container
+  }
+</script>

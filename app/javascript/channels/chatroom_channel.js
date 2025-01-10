@@ -22,9 +22,9 @@ document.addEventListener('turbo:load', () => { // Turbo Load event to initializ
 
         html = data.html
         var chatBox = document.getElementById('message_content')
-        // var mediaBox = document.getElementById('message_media_file')
+        var mediaBox = document.getElementById('message_image')
         chatBox.value = ''
-        // mediaBox.value = ''
+        mediaBox.value = ''
       }
     });
   }

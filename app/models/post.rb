@@ -10,4 +10,6 @@ class Post < ApplicationRecord
   def self.search_by_body(query)
     joins(:rich_text_body).where("action_text_rich_texts.body ILIKE ?", "%#{query}%")
   end
+
+
 end

@@ -6,6 +6,11 @@
     <%= f.text_field :content, placeholder: "Type a message" %>
   </div>
 
+  <div>
+    <%= f.label :image, style: "display: block"%>
+    <%= f.file_field :image %>
+  </div>
+
   <div class="actions">
     <%= f.submit "Send" %>
   </div>

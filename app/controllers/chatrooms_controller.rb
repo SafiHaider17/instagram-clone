@@ -31,3 +31,4 @@ class ChatroomsController < ApplicationController
     params.require(:chatroom).permit(:name)
   end
 end
+

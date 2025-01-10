@@ -1,82 +1,81 @@
 <p style="color: green"><%= notice %></p>
 <% content_for :title, "Posts" %>
 <%= render "posts/filter" %>
-<%= link_to "New post", new_post_path, class: "btn btn-primary" %>
+<%= link_to "New post", new_post_path, class: "btn btn-primary mb-4" %>
 
-<table class="table table-striped table-bordered">
-  <thead>
-    <tr>
-      <th>Image/Video</th>
-      <th>Body</th>
-      <th>Posted By</th>
-      <th>Posted At</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
+<!-- Posts Grid - Bootstrap Grid -->
+<div class="container">
+  <div class="row justify-content-center">
     <% @posts.each do |post| %>
-      <tr id="<%= dom_id(post) %>">
-        <td>
-          <% if post.image.attached? %>
-            <% if post.image.content_type.start_with?('image') %>
-              <!-- Image with modal functionality -->
-              <%= image_tag(post.image, width: "100", height: "100", class: 'img-fluid', data: { toggle: 'modal', target: "#imageModal#{post.id}" }) %>
-              
-              <!-- Image Modal -->
-              <div class="modal fade" id="imageModal<%= post.id %>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel<%= post.id %>" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="imageModalLabel<%= post.id %>">Post Image</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <%= image_tag(post.image, class: 'img-fluid') %>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <% elsif post.image.content_type.start_with?('video') %>
+      <div class="col-md-7 mb-8">
+        <!-- Post Card -->
+        <div class="card shadow-sm">
+          <!-- Post Image/Video -->
+          <div class="card-body">
+            <% if post.image.attached? %>
+              <% if post.image.content_type.start_with?('image') %>
+                <!-- Image -->
+                <%= image_tag(post.image, class: 'card-img-top img-fluid mx-auto d-block', style: 'max-width: 50%; height: auto;', data: { toggle: 'modal', target: "#imageModal#{post.id}" }) %>
 
-
-              <!-- Video with modal functionality -->
-              <button class="btn btn-lg video" data-video="<%= url_for(post.image) %>" data-toggle="modal" data-target="#videoModal<%= post.id %>">
-                <%= video_tag(post.image, style: 'max-width:100px;') %>
-              </button>
-
-              <!-- Video Modal -->
-              <div class="modal fade" id="videoModal<%= post.id %>" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel<%= post.id %>" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-body">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                      <video controls width="100%">
-                        <source src="<%= url_for(post.image) %>" type="video/mp4">
-                      </video>
+                <!-- Image Modal -->
+                <div class="modal fade" id="imageModal<%= post.id %>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel<%= post.id %>" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel<%= post.id %>">Post Image</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <%= image_tag(post.image, class: 'img-fluid') %>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              <% elsif post.image.content_type.start_with?('video') %>
+                <!-- Video -->
+                <button class="btn btn-lg video" data-video="<%= url_for(post.image) %>" data-toggle="modal" data-target="#videoModal<%= post.id %>">
+                  <%= video_tag(post.image, class: 'card-img-top img-fluid', style: 'max-width: 50%;') %>
+                </button>
+
+                <!-- Video Modal -->
+                <div class="modal fade" id="videoModal<%= post.id %>" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel<%= post.id %>" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" >
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <video controls width="100%">
+                          <source src="<%= url_for(post.image) %>" type="video/mp4">
+                        </video>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <p>No media attached</p>
             <% end %>
-          <% else %>
-            <p>No media attached</p>
-          <% end %>
-        </td>
-        <td><%= post.body %></td>
-        <td><%= post.user.username %></td>
-        <td><%= post.created_at.strftime("%-l:%M%P, %B %-d, %Y") %></td>
-        <td>
-          <%= link_to "View", post, class: "btn btn-info btn-sm" %>
-          <%= render partial: "likes/button", locals: { post: post } %>
-        </td>
-      </tr>
+          </div>
+
+          <!-- Post Caption and Meta Information -->
+          <div class="card-footer">
+            <p><%= post.body %></p>
+            <small class="text-muted" style="width: 200px;">Posted by <%= post.user.username %> on <%= post.created_at.strftime("%-l:%M%P, %B %-d, %Y") %></small>
+          </div>
+
+          <!-- Action Buttons (View, Like, etc.) -->
+          <div class="card-footer text-right">
+            <%= link_to "View", post, class: "btn btn-info btn-sm" %>
+            <%= render partial: "likes/button", locals: { post: post } %>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+</div>
 
 <!-- Bootstrap and jQuery (required for modal functionality) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -103,8 +102,3 @@
     });
   });
 </script>
-
-
-
-
-

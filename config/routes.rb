@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   get '/about', to: "pages#about"
 
   # Define the root path route for unauthenticated users
-  root "pages#home"
+  root "posts#index"
 
   # Define the authenticated root path route for logged-in users
   authenticated :user do

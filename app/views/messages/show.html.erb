@@ -1,7 +1,8 @@
 <div id="messages">
   <% @chatroom.messages.each do |message| %>
-    <div><strong><%= message.user.username %></strong>: <%= message.content %></div>
-  <% end %>
+      <%= render 'messages/message', message: message %>
+    <% end %>
 </div>
 
 <%= render 'messages/form', message: Message.new, chatroom: @chatroom %>
+

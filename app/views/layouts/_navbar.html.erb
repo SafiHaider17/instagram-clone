@@ -12,6 +12,13 @@
           <li class="nav-item">
             <%= link_to current_user.username, edit_user_registration_path, class: "nav-link" %>
           </li>
+            <li> <% if current_user.avatar.attached? %>
+             <%= image_tag url_for(current_user.avatar),style:"
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;" %>
+               <% end %>
+             </li>
           <li class="nav-item">
             <%= link_to "New Chat", new_chatroom_path, class: "nav-link" %>
           </li>
